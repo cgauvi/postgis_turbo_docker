@@ -108,9 +108,11 @@ services:
       - 8000:80
     volumes:
       - ../html/tiles_render.html:/usr/share/nginx/html/tiles_render.html
-      - ../html/geonames-lookup.html:/usr/share/nginx/html/geonames.html
-      - ../html/address-lookup.html:/usr/share/nginx/html/address.html
-      - ../html/buildings_tax.html:/usr/share/nginx/html/buildings_tax.html
+      - ../html/address-lookup.html:/usr/share/nginx/html/address-lookup.html
+      - ../html/buildings_tax_pgtileserv.html:/usr/share/nginx/html/buildings_tax_pgtileserv.html
+    depends_on:
+        db:
+          condition: service_healthy
     networks:
       - pgNet3
 
@@ -119,14 +121,14 @@ services:
     ports:
       - '80:6081'
     environment:
-      BACKENDS: 'tileserv_private:7810'
+      BACKENDS: 'tileserv:7800'
       DNS_ENABLED: 'false'
       COOKIES: 'true'
       PARAM_VALUE: '-p default_ttl=600'
     networks:
       - pgNet3
     depends_on:
-      - tileserv_private
+      - tileserv
 
 
 
