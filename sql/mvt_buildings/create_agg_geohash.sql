@@ -44,7 +44,13 @@ BEGIN
 
 	EXECUTE sql_cmd;
 
-	
+	-- Spatial index for speed up
+	sql_cmd := 'create INDEX  if not exists postgisftw.building_footprints_open_data_proj_geo_' || geohash_prec || ' _idx 
+	ON postgisftw.building_footprints_open_data_proj_geo_' || geohash_prec || '
+	USING GIST(geom);';
+
+	EXECUTE sql_cmd;
+
 END;
 $$
 LANGUAGE 'plpgsql'
@@ -53,13 +59,15 @@ PARALLEL SAFE;
 
 COMMENT ON FUNCTION public.create_agg_geohash_tbl IS E'Aggregate features at a given geohash level';
  
---- # Create the tables
+-- Create the tables in postgisftw
+-- Cant revoke select on them, but will not be accesible via pg feature serv if geom type is Geometry Collection.. 
 drop table if exists postgisftw.building_footprints_open_data_proj_geo_7;
 drop table if exists postgisftw.building_footprints_open_data_proj_geo_6;
 drop table if exists postgisftw.building_footprints_open_data_proj_geo_3;
 drop table if exists postgisftw.building_footprints_open_data_proj_geo_4;
 drop table if exists postgisftw.building_footprints_open_data_proj_geo_5;
 
+-- These wont be acesible via pg feature serv since they reside in public
 select public.create_agg_geohash_tbl(6);
 select public.create_agg_geohash_tbl(7);
 select public.create_agg_geohash_tbl(5);
@@ -71,8 +79,12 @@ create table postgisftw.building_footprints_open_data_proj as
 (
 	select ST_MakeValid(ST_Transform( geom ,3857)) as geom, gid_origin, table_orig
 	from public.building_footprints_open_data
-	limit 1000
+	--limit 1000
 );
+
+create INDEX if not exists building_footprints_open_data_proj_idx 
+ON postgisftw.building_footprints_open_data_proj
+USING GIST(geom);
  
 ALTER TABLE postgisftw.building_footprints_open_data_proj
 ALTER COLUMN geom type geometry(MultiPolygon, 3857); 

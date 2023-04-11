@@ -2,17 +2,23 @@
  
 create table if not exists postgisftw.gic_geo_muni_proj as
 (
-	select st_transform( geom, 3347) as geom_transf, mus_nm_mun
+	select st_transform( geom, 3347) as geom_transformed, mus_nm_mun
 	from public.gic_geo_muni 
 );
+
+
+create INDEX if not exists gic_geo_muni_proj_idx 
+ON  postgisftw.gic_geo_muni_proj
+USING GIST(geom_transformed);
+
 
 create table if not exists  postgisftw.gic_geo_role_eval_cleaned_pc_adm_da_city as
 (
 	SELECT poly.mus_nm_mun as city,  pts.*
 	FROM postgisftw.gic_geo_role_eval_cleaned_pc_adm_da_proj as pts
 	JOIN postgisftw.gic_geo_muni_proj as poly
-	ON ST_Contains(poly.geom_transf, pts.geom) 
-	LIMIT 1000
+	ON ST_Contains(poly.geom_transf, pts.geom_transformed) 
+	--LIMIT 1000
 );
 
 
