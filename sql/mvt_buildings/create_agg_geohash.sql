@@ -44,10 +44,6 @@ BEGIN
 
 	EXECUTE sql_cmd;
 
-	-- Revoke select
-	sql_cmd :=  ' REVOKE SELECT ON  postgisftw.building_footprints_open_data_proj_geo_' || geohash_prec || ' FROM generic_ro_user;';
-	RAISE NOTICE 'SQL Code: (%)', sql_cmd;
-	EXECUTE sql_cmd;
 	
 END;
 $$

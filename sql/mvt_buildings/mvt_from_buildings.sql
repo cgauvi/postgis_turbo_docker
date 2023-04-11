@@ -3,7 +3,7 @@ drop function if exists postgisftw.mvt_from_buildings;
 
 CREATE OR REPLACE
 FUNCTION postgisftw.mvt_from_buildings( z integer, x integer, y integer,
-								tbl_name_proj varchar default 'public.building_footprints_open_data_proj' , 
+								tbl_name_proj varchar default 'postgisftw.building_footprints_open_data_proj' , 
 								geom_col_name varchar default  'geom')
 RETURNS bytea
 AS $$
