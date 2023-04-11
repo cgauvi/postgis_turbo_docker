@@ -75,16 +75,27 @@ select public.create_agg_geohash_tbl(4);
 select public.create_agg_geohash_tbl(3);
 
 drop table if exists postgisftw.building_footprints_open_data_proj;
+
+-- https://gis.stackexchange.com/questions/165151/postgis-update-multipolygon-with-st-makevalid-gives-error
 create table postgisftw.building_footprints_open_data_proj as
 (
-	select ST_MakeValid(ST_Transform( geom ,3857)) as geom, gid_origin, table_orig
+	select st_multi(
+		st_collectionextract(
+			ST_MakeValid(
+				ST_Transform(geom ,3857)
+			), 3)
+		) as geom, gid_origin, table_orig
 	from public.building_footprints_open_data
 	--limit 1000
 );
 
+ALTER TABLE postgisftw.building_footprints_open_data_proj
+ALTER COLUMN geom type geometry(MultiPolygon, 3857); 
+
 create INDEX if not exists building_footprints_open_data_proj_idx 
 ON postgisftw.building_footprints_open_data_proj
 USING GIST(geom);
+
+
+grant select on postgisftw.building_footprints_open_data_proj to generic_ro_user;
  
-ALTER TABLE postgisftw.building_footprints_open_data_proj
-ALTER COLUMN geom type geometry(MultiPolygon, 3857); 
