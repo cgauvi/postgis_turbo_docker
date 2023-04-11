@@ -1,0 +1,33 @@
+[Server]
+# Accept connections on this subnet (default accepts on all)
+HttpHost = "0.0.0.0"
+
+# IP ports to listen on
+HttpPort = 9000
+
+# String to return for Access-Control-Allow-Origin header
+CORSOrigins = "*"
+
+# set Debug to true to run in debug mode (can also be set on cmd-line)
+Debug = true
+
+[Paging]
+# The default number of features in a response
+LimitDefault = 20
+# Maxium number of features in a response
+LimitMax = 10000
+
+[Metadata]
+# Title for this service
+Title = "Address DB pg-featureserv"
+# Description of this service
+Description = "Address DB Feature Server"
+
+
+[Database]
+# Publish only these schemas and tables (default is to publish all spatial tables)
+TableIncludes = [ "postgisftw" ]
+
+# Publish functions from these schemas (default is publish postgisftw)
+FunctionIncludes = [ "postgisftw"   ]
+FunctionExcludes = [ "public"   ]

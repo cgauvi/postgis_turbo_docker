@@ -1,0 +1,18 @@
+FROM kartoza/postgis:15-3
+ 
+# Custom part to clone & install addressing_dictionary
+RUN apt-get update \
+      && apt-get install -y git \
+      && apt-get install -y make 
+
+RUN git config --global http.sslVerify false
+
+RUN git clone https://github.com/pramsey/pgsql-addressing-dictionary
+
+WORKDIR pgsql-addressing-dictionary
+
+RUN make install 
+
+# Copy the custom initialization scripts into the entrypoint drectory - should get executed automatically when running the container
+COPY ./create_extensions.sh /docker-entrypoint-initdb.d/
+COPY ./create_schema_users.sh /docker-entrypoint-initdb.d/
