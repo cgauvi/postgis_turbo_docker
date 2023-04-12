@@ -34,7 +34,7 @@
     $( "#tags" ).autocomplete({
       // Send autocomplete query to this URL end point
       source: function(request, response) {
-        var url = "http://localhost:9001/functions/postgisftw.address_query/items.json?partialstr=";
+        var url = "http://localhost:5054/functions/postgisftw.address_query/items.json?partialstr=";
         var q = encodeURI(request.term);
         $.get(url+q, function(data) {
           response(data.features.map(function(d) {

@@ -184,7 +184,7 @@ function polyPaintFctZoom(){
       }
 
   // Build the tile URL
-  var vectorServer = "http://localhost:7801/";
+  var vectorServer = "http://localhost:5055/";
   var vectorSourceLayer1 = "postgisftw.mvt_from_buildings";
   var vectorProps = "?limit=10000"
   var vectorUrl1 = vectorServer + vectorSourceLayer1 + "/{z}/{x}/{y}.pbf" + vectorProps;
@@ -208,7 +208,7 @@ function polyPaintFctZoom(){
 
     map.addSource('osm', {
       "type": "vector",
-      "tiles": ["http://localhost:789/services/osm_openmaptiles_max_zoom_14/tiles/{z}/{x}/{y}.pbf"],
+      "tiles": ["http://localhost:5056/services/osm_openmaptiles_max_zoom_14/tiles/{z}/{x}/{y}.pbf"],
       "minzoom": 0,
       "maxzoom": 22
     });

@@ -54,7 +54,7 @@ services:
     image: pramsey/pg_tileserv
     command: "--config /app/config.toml"
     ports:
-      - 7899:7810
+      - 5057:7810
     volumes:
       - ./config/tileserv_config_private.toml:/app/config.toml:ro
     networks:
@@ -71,7 +71,7 @@ services:
     image: pramsey/pg_tileserv
     command: "--config /app/config.toml"
     ports:
-      - 7801:7800
+      - 5055:7800
     volumes:
       - ./config/tileserv_config.toml:/app/config.toml:ro
     networks:
@@ -89,7 +89,7 @@ services:
     image: pramsey/pg_featureserv
     command: "--config /app/config.toml"
     ports:
-      - 9001:9000
+      - 5054:9000
     volumes:
       - ./config/featureserv_config.toml:/app/config.toml:ro
     networks:
@@ -142,7 +142,7 @@ services:
     entrypoint: /mbtileserver --enable-reload-signal --dir /opt/tippecanoe/tiles
     restart: always
     ports:
-        - 789:8000
+        - 5056:8000
     networks:
       - pgNet3
     volumes:
