@@ -28,6 +28,7 @@ This repo provides a basic setup to create a postgis db with additional extensio
 Running examples in this repo requires:
 
 - Docker-compose >= V2
+- Docker (manual `docker/docker_up_manual.sh` script provided for convenience)
 
 
 ## Usage
@@ -45,20 +46,33 @@ git clone https://github.com/cgauvi/postgis_turbo_docker.git
 3. The images requires exposing a few ports. Make sure the following  are exposed and opened:
 
 - Postgis db: 5052
-- Tileserv (private): 7899
-- Tileserv (public): 7801
-- Feature serv: 9001
-- Mbtile serv: 789
+- Tileserv (private): 5057 (only set up with compose)
+- Tileserv (public): 5055
+- Feature serv: 5054
+- Mbtile serv: 5056
 - Nginx: 8000 
 
 
 4. Build and run the docker containers with docker-compose
 
-- Get the configuration file with env variables `.env` and place it in `./config/.env`
-- Build the containers, volumes and network from within the docker directory:
+- With `docker compose`
+
+    - Get the configuration file with env variables `.env` and place it in `./config/.env`
+    - Build the containers, volumes and network from within the docker directory:
 ```
 cd docker
 docker compose -f docker-compose.yml --env-file ./config/.env up
 ```
 
 
+- With regular `docker`
+
+    - Set `docker/set-env-vars.sh` with appropriate vars. See `docker/set-env-vars_sample.sh` for an example. 
+    - Run the following
+
+
+```
+cd docker
+chmod u+x docker_up_manual.sh
+./docker_up_manual.sh
+```
