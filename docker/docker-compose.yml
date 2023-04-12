@@ -39,7 +39,7 @@ services:
       - POSTGRES_DBNAME=$POSTGRES_DBNAME
       - POSTGRES_HOST_AUTH_METHOD=trust
       - PGDATA=/var/lib/postgresql/data/pgdata
-      - POSTGRES_SCHEMA_PUBLIC_FACING=postgisftw
+      - POSTGRES_SCHEMA_PUBLIC_FACING=$POSTGRES_SCHEMA_PUBLIC_FACING
     ports:
       - 5052:5432
     healthcheck:
