@@ -32,17 +32,33 @@ Running examples in this repo requires:
 
 ## Usage
 
-Clone the repo
+1. Clone the repo
 
 ```
 git clone https://github.com/cgauvi/postgis_turbo_docker.git
 ```
 
-Get the configuration file with env variables `.env` and place it in `./config/.env`
+2. (optional) Create mbtiles (e.g. using a docker image from this [this repo](https://github.com/cgauvi/tippecanoe_docker)) and place them in `./tiles/`. _The tiles must be placed at this location BEFORE the mbtileserv service is started. Otherwise, files will not be detected_.
 
-Build the containers, volumes and network from within the docker directory:
 
+
+3. The images requires exposing a few ports. Make sure the following  are exposed and opened:
+
+- Postgis db: 5052
+- Tileserv (private): 7899
+- Tileserv (public): 7801
+- Feature serv: 9001
+- Mbtile serv: 789
+- Nginx: 8000 
+
+
+4. Build and run the docker containers with docker-compose
+
+- Get the configuration file with env variables `.env` and place it in `./config/.env`
+- Build the containers, volumes and network from within the docker directory:
 ```
 cd docker
 docker compose -f docker-compose.yml --env-file ./config/.env up
 ```
+
+
