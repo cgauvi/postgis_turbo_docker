@@ -13,6 +13,11 @@ else
 fi
 
 
+# ==== Named volume ======
+docker volume create pgDataManual
+# get back the volume location on the host with:
+# `docker inspect pgDataManual -f '{{.Mountpoint}}'`
+
 # ===== build images =====
 ## postgis DB
 result=$( docker images -q docker_db_manual )
@@ -95,7 +100,10 @@ if [ "$( docker container inspect -f '{{.State.Running}}' 'docker_db_manual_run'
         -e POSTGRES_USER_RO=$POSTGRES_USER_RO\
         -e POSTGRES_PASSWORD_RO=$POSTGRES_PASSWORD_RO\
         -e POSTGRES_SCHEMA_PUBLIC_FACING=$POSTGRES_SCHEMA_PUBLIC_FACING \
+        -e POSTGRES_HOST_AUTH_METHOD=trust \
+        -e PGDATA=/var/lib/postgresql/data/pgdata \
         --network pgNetManual \
+        --volume pgDataManual:/var/lib/postgresql/data \
         -p 5053:5432 \
         --name docker_db_manual_run \
         --health-cmd "pg_isready -d gis" \
@@ -117,7 +125,7 @@ done;
 echo 'db healthy ... '
 
 ## pg feature serv
-if [ "$(docker ps -aq -f status=exited -f name=featureserv_config_run)" ]; then
+if [ "$(docker ps -aq -f status=exited -f name=featureserv_config_run)" ] || [ "$(docker ps -aq -f status=created -f name=featureserv_config_run)" ]; then
         # cleanup
         echo "Cleaning up .. container featureserv_config_run already exists "
         docker rm featureserv_config_run
@@ -140,7 +148,7 @@ fi
 
 
 ## pg tile serv 
-if [ "$(docker ps -aq -f status=exited -f name=tileserv_run)" ]; then
+if [ "$(docker ps -aq -f status=exited -f name=tileserv_run)" ] || [ "$(docker ps -aq -f status=created -f name=tileserv_run)" ]; then
         # cleanup
         echo "Cleaning up .. container tileserv_run already exists "
         docker rm tileserv_run
@@ -162,7 +170,7 @@ fi
 
 
 ## varnish cache
-if [ "$(docker ps -aq -f status=exited -f name=varnish_run)" ]; then
+if [ "$(docker ps -aq -f status=exited -f name=varnish_run)" ] || [ "$(docker ps -aq -f status=created -f name=varnish_run)"  ]; then
         # cleanup
         echo "Cleaning up .. container varnish_run already exists "
         docker rm varnish_run
@@ -185,7 +193,7 @@ fi
 
 
 ## mbtile serv
-if [ "$(docker ps -aq -f status=exited -f name=mbtileserver_run)" ]; then
+if [ "$(docker ps -aq -f status=exited -f name=mbtileserver_run)" ] || [ "$(docker ps -aq -f status=created -f name=mbtileserver_run)"  ]; then
         # cleanup
         echo "Cleaning up .. container mbtileserver_run already exists "
         docker rm mbtileserver_run
@@ -207,7 +215,7 @@ fi
 
 
 ## nginx
-if [ "$(docker ps -aq -f status=exited -f name=nginx_run)" ]; then
+if [ "$(docker ps -aq -f status=exited -f name=nginx_run)" ] || [ "$(docker ps -aq -f status=created -f name=nginx_run)" ]; then
         # cleanup
         echo "Cleaning up .. container nginx_run already exists "
         docker rm nginx_run
