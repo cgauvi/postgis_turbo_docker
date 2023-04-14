@@ -1,7 +1,7 @@
  #! bin/bash 
  
 if [ ! -d ./libpostal ]; then
-    git clone --depth 1 --branch v1.1 https://github.com/openvenues/libpostal ./libpostal
+    git clone --depth 1 --branch v1.0.0 https://github.com/openvenues/libpostal ./libpostal
     find ./libpostal -type f -print0 | xargs -0 dos2unix
 else
     echo "Already cloned repo libpostal.."
