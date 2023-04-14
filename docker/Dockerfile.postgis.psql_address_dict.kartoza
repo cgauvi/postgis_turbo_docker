@@ -31,12 +31,20 @@ COPY ./libpostal /libpostal
 WORKDIR /libpostal
 
 COPY ./build_libpostal.sh .
-#RUN ./build_libpostal.sh
+RUN ./build_libpostal.sh
 
 # Fetch data and uncompress in appropriate location
 COPY ./build_libpostal_data.sh .
 COPY ./local_postal_lib_data /opt/libpostal_data
-#RUN ./build_libpostal_data.sh
+RUN ./build_libpostal_data.sh
+
+
+# Install pg extension
+WORKDIR /
+COPY ./pgsql-postal /pgsql-postal
+WORKDIR /pgsql-postal
+RUN make
+RUN make install
 
 # Copy the custom initialization scripts into the entrypoint drectory - should get executed automatically when running the container
 COPY ./create_extensions.sh /docker-entrypoint-initdb.d/

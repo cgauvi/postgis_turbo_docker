@@ -13,6 +13,9 @@ chmod u+x ./dl_postal_lib.sh
 dos2unix ./dl_postal_lib.sh
 ./dl_postal_lib.sh
 
+# Convert scripts to UNIX format: new lines
+dos2unix ./build_libpostal_data.sh
+dos2unix ./build_libpostal.sh
 
 # Download pgsql
 if [ ! -d ./pgsql-postal ]; then
