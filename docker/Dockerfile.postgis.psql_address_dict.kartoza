@@ -1,17 +1,37 @@
 FROM kartoza/postgis:15-3
  
+ENV LC_ALL=C.UTF-8 \
+    LANG=C.UTF-8 \
+    PYTHONPATH="/usr/local/app/" \
+    MPLBACKEND="agg" \
+    REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+
+WORKDIR /usr/local/app
+
 # Custom part to clone & install addressing_dictionary
 RUN apt-get update \
       && apt-get install -y git \
       && apt-get install -y make 
 
 RUN git config --global http.sslVerify false
-
+RUN git config --global https.sslVerify false
 RUN git clone https://github.com/pramsey/pgsql-addressing-dictionary
 
 WORKDIR pgsql-addressing-dictionary
 
 RUN make install 
+
+
+# Install lib postal
+RUN apt-get update && apt-get install -y \
+     curl autoconf automake libtool pkg-config
+
+WORKDIR /
+COPY ./libpostal /libpostal
+WORKDIR /libpostal
+#COPY ./build_libpostal.sh .
+#RUN ./build_libpostal.sh
+
 
 # Copy the custom initialization scripts into the entrypoint drectory - should get executed automatically when running the container
 COPY ./create_extensions.sh /docker-entrypoint-initdb.d/
