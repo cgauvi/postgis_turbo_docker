@@ -22,7 +22,9 @@ conn_admin <- RPostgres::dbConnect(
 list_ogr_cmd <- c('GIC_geo_muni' = glue::glue('ogr2ogr  -a_srs   \'EPSG:4326\'     -progress  "PG:host={host} dbname={dbname} user={user} password={password} port={port}"    -lco SCHEMA=public -lco GEOMETRY_NAME=geom "C:/Users/app12621/Dev/GIC_VEXCEL/data/qc_muni.gpkg" -nln GIC_geo_muni -lco PG_USE_COPY=YES'),
                   'GIC_geo_role_eval_cleaned_pc_adm_da' = glue::glue( 'ogr2ogr -a_srs \'EPSG:3347\' -progress  "PG:host={host} dbname={dbname} user={user} password={password} port={port}"  -lco SCHEMA=public   -lco GEOMETRY_NAME=geom  "C:/Users/app12621/Dev/GIC_VEXCEL/data/GIC_geo_role_eval_cleaned_pc_adm_da/GIC_geo_role_eval_cleaned_pc_adm_da.gpkg" -nln GIC_geo_role_eval_cleaned_pc_adm_da -lco PG_USE_COPY=YES'),
                   'building_footprints_open_data' =  glue::glue('ogr2ogr -progress -a_srs \'EPSG:3347\' "PG:host={host} dbname={dbname} user={user} password={password} port={port}" -lco SCHEMA=public   -lco GEOMETRY_NAME=geom   "C:/Users/app12621/Dev/GIC_VEXCEL/data/DB_EXPORT_export_buildings/buildings.shp" -nln building_footprints_open_data -lco PG_USE_COPY=YES -nlt MULTIPOLYGON'),
-                  'cadastres' = glue::glue('ogr2ogr -progress -a_srs \'EPSG:3347\' "PG:host={host} dbname={dbname} user={user} password={password} port={port}" -lco SCHEMA=public   -lco GEOMETRY_NAME=geom  "C:/Users/app12621/Dev/GIC_VEXCEL/data/DB_EXPORT_export_cadastres/cadastres.shp" -nln cadastres -lco PG_USE_COPY=YES -nlt MULTIPOLYGON')
+                  'cadastres' = glue::glue('ogr2ogr -progress -a_srs \'EPSG:3347\' "PG:host={host} dbname={dbname} user={user} password={password} port={port}" -lco SCHEMA=public   -lco GEOMETRY_NAME=geom  "C:/Users/app12621/Dev/GIC_VEXCEL/data/DB_EXPORT_export_cadastres/cadastres.shp" -nln cadastres -lco PG_USE_COPY=YES -nlt MULTIPOLYGON'),
+                  'gic_geo_voronoi_actu' =  glue::glue('ogr2ogr -progress -a_srs \'EPSG:4326\' "PG:host={host} dbname={dbname} user={user} password={password} port={port}" -lco SCHEMA=public   -lco GEOMETRY_NAME=geom  "C:/Users/app12621/Dev/GIC_VEXCEL/data/to_extract/Voronoi_actu_utf_8/Voronoi_actu_utf_8.shp" -nln gic_geo_voronoi_actu -lco PG_USE_COPY=YES -nlt MULTIPOLYGON'),
+                  'gic_geo_addresses' =  glue::glue('ogr2ogr -progress -a_srs \'EPSG:3347\' "PG:host={host} dbname={dbname} user={user} password={password} port={port}" -lco SCHEMA=public   -lco GEOMETRY_NAME=geom   "C:/Users/app12621/Dev/GIC_VEXCEL/data/DB_EXPORT_export_addresses/addresses.shp" -nln gic_geo_addresses -lco PG_USE_COPY=YES ')
                    )
 
 
@@ -32,7 +34,8 @@ lapply(seq_along(list_ogr_cmd), function(x){
 
   # Populate DB by uploading tables
   if(!RPostgres::dbExistsTable(conn_admin, tbl_name)){
-    system(x)
+    print(glue::glue('Uploading {tbl_name} by running {list_ogr_cmd[[x]]}'))
+    system(list_ogr_cmd[[x]])
   }else{
     print(glue::glue('Table {tbl_name} already exists'))
   }
