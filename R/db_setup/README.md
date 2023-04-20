@@ -36,4 +36,4 @@ Presently the DB is set can be configured by either
 
   
    
-2. The 2nd (buggy and not 100% working) options is to run these multi statements scripts semi automcaticall in python using `R/db_setup/db_populate.R` (from within `R/db_setup/`). _Note_: running multi statement sql commands always leads to errors. 
+2. The 2nd (buggy but semi working) options is to run these multi statements scripts semi automcaticall in python using `R/db_setup/db_populate.R` (from within `R/db_setup/`). _Note_: running multi statement sql commands always leads to errors. 

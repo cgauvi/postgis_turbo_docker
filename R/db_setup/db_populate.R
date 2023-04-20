@@ -4,8 +4,8 @@ readRenviron ('../.Renviron')
 
 DEST_DB <- 'dev'
 RUN_FEAT_SERV=T
-RUN_TILE_SERV=F
-
+RUN_TILE_SERV=T
+MAX_ATTEMPTS <- 10
 
 assertthat::assert_that(DEST_DB %in% c('dev', 'localhost'))
 
@@ -53,60 +53,58 @@ list_sql_commands_tile_serv <- c(
 
 assertthat::assert_that(all(sapply(list_sql_commands_tile_serv, file.exists)))
 
-# Feature serv
-if(RUN_FEAT_SERV){
+
+run_sql_wait_exec <- function(cmd){
   
-  lapply(list_sql_commands_feature_serv , function(x){
-    
-    cmd <- paste0(readLines(x), sep='', collapse = ' ')
-
-    print(glue::glue("Running {cmd}..."))
-
-    RPostgres::dbExecute(
+  r <- NULL
+  attempt <- 1
+  while( is.null(r) && attempt <= MAX_ATTEMPTS ) {
+    attempt <- attempt + 1
+    r <-    RPostgres::dbExecute(
         conn = conn_admin,
-        statement =  gsub("[\r\n\t]", " ", glue::glue(cmd))
+        statement =  glue::glue(cmd) 
     )
 
+  }
+  
+  return(r)
+  
+}
 
+ 
+run_list_cmds <- function(list_sql_files) {
+  
+  lapply(list_sql_files, function(x){
+    
+    cmd <- paste(readLines(x),   collapse = '\n')
+    list_cmds <- strsplit(cmd, split = '-- #', fixed = T)
+    
+    lapply(seq_along(list_cmds[[1]]), function(x){
+      print(glue::glue("Running {list_cmds[[1]][[x]]}..."))
+      run_sql_wait_exec(gsub("[\t]", " ", glue::glue(list_cmds[[1]][[x]])))
+    })
+    
   })
   
-  print('Successfully ran all feature serv queries')
 }
  
 
+if(RUN_FEAT_SERV) {
+  run_list_cmds(list_sql_commands_feature_serv)
+  print('Successfully ran all feature serv queries')
+}
+ 
+  
 
-# Feature serv
-if(RUN_TILE_SERV){
-  
-  lapply(list_sql_commands_tile_serv , function(x){
-    
-    cmd <- paste0(readLines(x), sep='', collapse = ' ')
-    
-    print(glue::glue("Running {cmd}..."))
-    
-    RPostgres::dbExecute(
-      conn = conn_admin,
-      statement =  gsub("[\r\n\t]", " ", glue::glue(cmd))
-    )
-    
-    
-  })
-  
+if(RUN_TILE_SERV) {
+  run_list_cmds(list_sql_commands_tile_serv)
   print('Successfully ran all tile serv queries')
 }
 
+ 
+
 
 # Comments
-cmd <- paste0(readLines( here::here('../sql/comments.sql')), sep='', collapse = ' ')
-list_cmds <- strsplit(cmd, split = '-- #', fixed = T)
-
-lapply(seq_along(list_cmds[[1]]), function(x){
-  print(glue::glue("Running {list_cmds[[1]][[x]]}..."))
-  
-  res <- RPostgres::dbExecute(
-    conn = conn_admin,
-    statement =  gsub("[\r\n\t]", " ", list_cmds[[1]][[x]])
-  )
-  
-  
-})
+list_cmd_comments <- c( here::here('../sql/comments.sql') )
+run_list_cmds(list_cmd_comments)
+print('Successfully ran all comments queries')
