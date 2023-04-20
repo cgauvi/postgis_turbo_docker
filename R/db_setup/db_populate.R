@@ -56,19 +56,17 @@ assertthat::assert_that(all(sapply(list_sql_commands_tile_serv, file.exists)))
 # Feature serv
 if(RUN_FEAT_SERV){
   
-  lapply(list_sql_commands_tile_serv, function(x){
+  lapply(list_sql_commands_feature_serv , function(x){
     
     cmd <- paste0(readLines(x), sep='', collapse = ' ')
-    list_cmds <- strsplit(cmd, split = '-- #', fixed = T)
-    
-    lapply(seq_along(list_cmds[[1]]), function(x){
-      print(glue::glue("Running {list_cmds[[1]][[x]]}..."))
-      
-      RPostgres::dbExecute(
+
+    print(glue::glue("Running {cmd}..."))
+
+    RPostgres::dbExecute(
         conn = conn_admin,
-        statement =  gsub("[\r\n\t]", " ", list_cmds[[1]][[x]])
-      )
-    })
+        statement =  gsub("[\r\n\t]", " ", glue::glue(cmd))
+    )
+
 
   })
   
@@ -80,22 +78,35 @@ if(RUN_FEAT_SERV){
 # Feature serv
 if(RUN_TILE_SERV){
   
-  lapply(list_sql_commands_feature_serv, function(x){
+  lapply(list_sql_commands_tile_serv , function(x){
     
     cmd <- paste0(readLines(x), sep='', collapse = ' ')
-    list_cmds <- strsplit(cmd, split = '-- #', fixed = T)
     
-    lapply(seq_along(list_cmds[[1]]), function(x){
-      print(glue::glue("Running {list_cmds[[1]][[x]]}..."))
-      
-      RPostgres::dbExecute(
-        conn = conn_admin,
-        statement =  gsub("[\r\n\t]", " ", list_cmds[[1]][[x]])
-      )
-    })
+    print(glue::glue("Running {cmd}..."))
+    
+    RPostgres::dbExecute(
+      conn = conn_admin,
+      statement =  gsub("[\r\n\t]", " ", glue::glue(cmd))
+    )
+    
     
   })
   
   print('Successfully ran all tile serv queries')
 }
 
+
+# Comments
+cmd <- paste0(readLines( here::here('../sql/comments.sql')), sep='', collapse = ' ')
+list_cmds <- strsplit(cmd, split = '-- #', fixed = T)
+
+lapply(seq_along(list_cmds[[1]]), function(x){
+  print(glue::glue("Running {list_cmds[[1]][[x]]}..."))
+  
+  res <- RPostgres::dbExecute(
+    conn = conn_admin,
+    statement =  gsub("[\r\n\t]", " ", list_cmds[[1]][[x]])
+  )
+  
+  
+})

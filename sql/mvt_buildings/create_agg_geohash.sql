@@ -1,4 +1,3 @@
-
 drop function if exists public.create_agg_geohash_tbl;
 -- #
 CREATE OR REPLACE
@@ -38,19 +37,13 @@ BEGIN
 		group by geom, geohash
 		order by num_buildings desc
 	);';
-	
-		
 	RAISE NOTICE 'SQL Code: (%)', sql_cmd;
-
 	EXECUTE sql_cmd;
-
-	-- Spatial index for speed up
+ 
 	sql_cmd := 'create INDEX  if not exists postgisftw.building_footprints_open_data_proj_geo_' || geohash_prec || ' _idx 
 	ON postgisftw.building_footprints_open_data_proj_geo_' || geohash_prec || '
 	USING GIST(geom);';
-
 	EXECUTE sql_cmd;
-
 END;
 $$
 LANGUAGE 'plpgsql'
@@ -76,7 +69,6 @@ select public.create_agg_geohash_tbl(3);
 -- #
 drop table if exists postgisftw.building_footprints_open_data_proj;
 -- #
--- https://gis.stackexchange.com/questions/165151/postgis-update-multipolygon-with-st-makevalid-gives-error
 create table postgisftw.building_footprints_open_data_proj as
 (
 	select st_multi(
@@ -86,11 +78,9 @@ create table postgisftw.building_footprints_open_data_proj as
 			), 3)
 		) as geom, gid_origin, table_orig
 	from public.building_footprints_open_data
-	--limit 1000
 );
 -- #
 ALTER TABLE postgisftw.building_footprints_open_data_proj
--- #
 ALTER COLUMN geom type geometry(MultiPolygon, 3857); 
 -- #
 create INDEX if not exists building_footprints_open_data_proj_idx 
