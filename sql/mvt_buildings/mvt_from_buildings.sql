@@ -30,4 +30,4 @@ LANGUAGE 'plpgsql'
 STABLE
 PARALLEL SAFE;
 -- #									
-COMMENT ON FUNCTION postgisftw.mvt_from_buildings IS E'From based on the zoom level, return a mvt with either all features (geometry) in a given tile enveloppe or a random subset of these.'
+COMMENT ON FUNCTION postgisftw.mvt_from_tax IS E'Based on the zoom (z) level + x & y tile coordinates, return the features (geom) that will help create a mapbox vector tile (mvt) for the Buildings data. Mostly for debugging'
