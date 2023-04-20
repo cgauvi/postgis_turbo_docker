@@ -15,7 +15,8 @@ Debug = true
 # The default number of features in a response
 LimitDefault = 20
 # Maxium number of features in a response
-LimitMax = 10000
+LimitMax = 100000000
+
 
 [Metadata]
 # Title for this service
