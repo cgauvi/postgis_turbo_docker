@@ -1,3 +1,5 @@
+archive/
+
 docker/set_env_vars.sh
 
 R/renv.lock
