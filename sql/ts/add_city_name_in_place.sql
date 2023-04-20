@@ -1,7 +1,5 @@
- 
-
-alter table public.gic_geo_role_eval_cleaned_pc_adm_da add city varchar;
-
+ALTER table public.gic_geo_role_eval_cleaned_pc_adm_da add city varchar;
+-- #
 WITH transformed as (
 	select st_transform( geom, 3347) as geom_transf, mus_nm_mun
 	from public.gic_geo_muni 
