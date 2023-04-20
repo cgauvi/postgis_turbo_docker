@@ -2,8 +2,8 @@ drop function if exists postgisftw.mvt_geom_from_tax;
 -- #
 CREATE OR REPLACE
 FUNCTION postgisftw.mvt_geom_from_tax( z integer, x integer, y integer,
-				tbl_name_proj varchar default 'postgisftw.gic_geo_role_eval_cleaned_pc_adm_da_proj' , 					
-				geom_col_name varchar default  'geom_transformed',
+				tbl_name_proj varchar default 'postgisftw.gic_geo_role_eval_cleaned_pc_adm_da' , 					
+				geom_col_name varchar default  'geom',
 				max_zoom integer default 13)
 RETURNS table (geom geometry, full_address varchar, 
 			num_storeys integer, year_construction integer, num_dwellings integer, value_total_asset numeric, 
