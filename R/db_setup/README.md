@@ -36,4 +36,4 @@ Presently the DB is set can be configured by either
 
   
    
-2. The 2nd (best) options is to run these multi statements scripts semi automcaticall in python using `R/db_setup/sql_cmd_db.py` (from within `R/db_setup/`). _Note_: running multi statement sql commands seems impossible in R, but is fine in python with `psycopg2`. _Note_: running this script requires `pip install python-dotenv` first.
+2. The 2nd (buggy and not 100% working) options is to run these multi statements scripts semi automcaticall in python using `R/db_setup/db_populate.R` (from within `R/db_setup/`). _Note_: running multi statement sql commands always leads to errors. 
