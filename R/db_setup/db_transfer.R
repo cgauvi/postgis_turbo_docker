@@ -1,6 +1,6 @@
 ### setup #### 
 
-readRenviron ('.Renviron')
+readRenviron ('../.Renviron')
 
 # db source parameters
 dbname= Sys.getenv("POSTGRES_DBNAME")
@@ -71,17 +71,7 @@ list_ogr_cmd <- c('gic_geo_role_eval_cleaned_pc_adm_da' = glue::glue( 'ogr2ogr -
                                           -lco GEOMETRY_NAME=geom 
                                           -nln gic_geo_pc_no_dups 
                                           -nlt MULTIPOLYGON 
-                                          gic_geo_pc_no_dups'  ),
-                  'gic_geo_muni'= glue::glue('ogr2ogr -progress 
-                                           -overwrite 
-                                          --config PG_USE_COPY YES   
-                                          "PG:host={host_dest} dbname={dbname} user={user} password={password} port={port_dest}" 
-                                          "PG:host={host_prod} dbname={dbname} user={user} password={password} port={port}" 
-                                          -lco SCHEMA={schema_dest} 
-                                          -lco GEOMETRY_NAME=geom 
-                                          -nln gic_geo_muni 
-                                          -nlt MULTIPOLYGON 
-                                          gic_geo_muni_census')
+                                          gic_geo_pc_no_dups')
 )
 
 

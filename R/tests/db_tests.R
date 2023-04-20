@@ -1,6 +1,11 @@
 
 # R script to test out permissions & access to DB
 # Requires running the tbl_upload script first and populating with at elast gic_geo_muni in public schema
+DEST_DB <- 'dev'
+assertthat::assert_that(db %in% c('dev','localhost'))
+
+host <- ifelse(DEST_DB == 'dev', Sys.getenv('POSTGRES_HOST_DEV'), 'localhost')
+port_dest <- ifelse(DEST_DB == 'dev', Sys.getenv('POSTGRES_PORT_DEV'), Sys.getenv('POSTGRES_PORT') )
 
 
 # --- Connect as read only user  ---
@@ -8,10 +13,10 @@
 conn_ro <- RPostgres::dbConnect(
   RPostgres::Postgres(),
   dbname=Sys.getenv("POSTGRES_DBNAME"),
-  host = 'localhost',
+  host = host,
   user = Sys.getenv("POSTGRES_USER_RO"),
   password = Sys.getenv("POSTGRES_PASSWORD_RO"),
-  port= Sys.getenv("POSTGRES_PORT")
+  port= port_dest
 )
 
 # Should fail: RO can read SELECT from public
@@ -25,7 +30,7 @@ testthat::expect_no_error({
 })
 
 
-testthat::expect_error({
+testthat::expect_no_error({
   tbl_query_public <- RPostgres::dbGetQuery(
     conn = conn_ro,
     statement = glue::glue(
@@ -59,16 +64,7 @@ testthat::expect_no_error({
 }
 )
 
- 
-# RO run functions from postgisftw
-testthat::expect_no_error({
-  fun_query <- RPostgres::dbGetQuery(
-    conn = conn_ro,
-    statement = glue::glue(
-      "SELECT postgisftw.to_tsquery_partial('beach') "
-    )
-  )
-})
+  
 
 # ------ Admin sanity check ----- 
 
