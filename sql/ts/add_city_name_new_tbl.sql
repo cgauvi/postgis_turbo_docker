@@ -24,5 +24,3 @@ create table if not exists  postgisftw.gic_geo_role_eval_cleaned_pc_adm_da_city 
 
 
 grant select on postgisftw.gic_geo_role_eval_cleaned_pc_adm_da_city to generic_ro_user;
-
- 

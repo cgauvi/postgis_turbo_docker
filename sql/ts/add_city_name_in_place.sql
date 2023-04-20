@@ -15,4 +15,4 @@ join_query AS (
 UPDATE public.gic_geo_role_eval_cleaned_pc_adm_da as m
   SET city = join_query.city
   FROM join_query
-  WHERE m.id_provinc = join_query.id_provinc
+  WHERE m.id_provinc = join_query.id_provinc;
