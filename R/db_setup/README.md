@@ -12,7 +12,9 @@ These are shitty R scripts to semi-manually populate the DB & setup the services
 
 ## SQL scripts
 
-Presently the DB is set up by manually running the following sql commands (in the following order) in pgadmin:
+Presently the DB is set can be configured by either 
+
+1. manually running the following sql commands (in the following order) in pgadmin:
 
    - `here::here('../sql/ts/add_city_name_new_tbl.sql')`,
    - `here::here('../sql/ts/create_ts_address.sql')`,
@@ -31,4 +33,7 @@ Presently the DB is set up by manually running the following sql commands (in th
    
   Where `here::here()` should point to `R` folder
    
-  Running these multi statements scripts seems impossible in R, but should be fine in python with `psycopg2`
+
+  
+   
+2. The 2nd (best) options is to run these multi statements scripts semi automcaticall in python using `./sql_cmd_db.py`. _Note_: running multi statement sql commands seems impossible in R, but is fine in python with `psycopg2`

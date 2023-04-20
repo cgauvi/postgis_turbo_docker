@@ -18,8 +18,10 @@ STRICT;
  
 
 DROP FUNCTION IF EXISTS postgisftw.address_query;
+
+
 CREATE OR REPLACE FUNCTION postgisftw.address_query(
-    partialstr text DEFAULT '', max_results int default 15)
+    partialstr text DEFAULT '' )
 RETURNS TABLE(gid varchar, value text, rank real,  no_civi varchar, no_civi_frac varchar, geom geometry)
 AS $$
 BEGIN
@@ -34,8 +36,7 @@ BEGIN
         FROM postgisftw.gic_geo_role_eval_cleaned_pc_adm_da_city  p,
              postgisftw.to_tsquery_partial(partialstr) AS query
         WHERE  ts @@ query 
-		ORDER BY rank DESC , no_civi ASC
-        LIMIT max_results;
+		ORDER BY rank DESC , no_civi ASC ;
 END;
 $$
 LANGUAGE 'plpgsql'
