@@ -4,15 +4,24 @@ ENV LC_ALL=C.UTF-8 \
     LANG=C.UTF-8 \
     PYTHONPATH="/usr/local/app/" \
     MPLBACKEND="agg" \
-    REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+    REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
+    H3_VERSION="v4.1.0"
 
 WORKDIR /usr/local/app
 
-# Custom part to clone & install addressing_dictionary
+# Libs and deps 
 RUN apt-get update \
       && apt-get install -y git \
-      && apt-get install -y make 
+      && apt-get install -y make \
+      && apt-get install -y --no-install-recommends gcc libtool 
 
+# Custom build of Cmake 3.20 .. 3.18 which is latest installed by apt-get is not sufficient for h3
+WORKDIR /
+COPY ./build_cmake.sh .
+RUN ./build_cmake.sh
+
+
+# Custom part to clone & install addressing_dictionary
 RUN git config --global http.sslVerify false
 RUN git config --global https.sslVerify false
 RUN git clone https://github.com/pramsey/pgsql-addressing-dictionary
@@ -39,12 +48,34 @@ COPY ./local_postal_lib_data /opt/libpostal_data
 RUN ./build_libpostal_data.sh
 
 
-# Install pg extension
+# Install pg extension for lib-postal
 WORKDIR /
 COPY ./pgsql-postal /pgsql-postal
 WORKDIR /pgsql-postal
 RUN make
 RUN make install
+
+# Install H3 C Library
+# RUN easy_install pgxnclient && /usr/local/bin/pgxn install h3
+WORKDIR /
+# COPY below requirs running ./dl_h3_github.sh before hand (cloning the repo locally and then copy pasting)
+# Use the custom cmake >=3.2 built above
+COPY ./h3c /h3c
+RUN cd h3c \
+   && git pull origin master --tags \
+   && git checkout "$H3_VERSION" \
+   && cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX:PATH=/usr -DWARNINGS_AS_ERRORS=OFF . \
+   && make install \
+   && cd .. \
+   && rm -rf h3c
+
+# Install pg extension for h3 
+RUN git clone https://github.com/zachasme/h3-pg.git \
+   && cd h3-pg \
+   && make install
+ 
+# Clean up
+RUN rm -rf /var/lib/apt/lists/*
 
 # Copy the custom initialization scripts into the entrypoint drectory - should get executed automatically when running the container
 COPY ./create_extensions.sh /docker-entrypoint-initdb.d/

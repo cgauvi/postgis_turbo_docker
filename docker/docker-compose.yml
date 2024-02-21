@@ -48,6 +48,7 @@ services:
       timeout: 60s
       retries: 5
       start_period: 80s  
+    shm_size: 10g
 
   
   tileserv_private:

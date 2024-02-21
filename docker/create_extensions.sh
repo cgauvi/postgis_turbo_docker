@@ -26,7 +26,7 @@ for DB in ${dbArrays[@]}; do
 done
 
 dbArrays=("$POSTGRES_DBNAME" "test")
-extensions=("postgis" "postgis_topology" "fuzzystrmatch" "postgis_tiger_geocoder" "address_standardizer" "addressing_dictionary" "postal")
+extensions=("postgis" "postgis_topology" "fuzzystrmatch" "postgis_tiger_geocoder" "address_standardizer" "addressing_dictionary" "postal" "h3")
 
 echo "creating extensions..."
 
