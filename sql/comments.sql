@@ -7,3 +7,9 @@ COMMENT ON TABLE postgisftw.gic_geo_pc_no_dups IS 'Approx postal codes created f
 COMMENT ON TABLE  postgisftw.gic_geo_role_eval_cleaned_pc_adm_da IS '2022 Tax assessment data for Quebec (Role evaluation)  Source: LaCapitale/GIC_VEXCEl from open data';
 -- #
 COMMENT ON TABLE postgisftw.gic_geo_role_eval_cleaned_pc_adm_da_city IS '2022 Tax assessment data for Quebec (Role evaluation) WITH Municipality. Source: LaCapitale/GIC_VEXCEl from open data';
+-- #
+comment on function postgisftw.address_query is 'Find an address in the tax assessment dataset using a (partial) string';
+-- #
+comment on function postgisftw.mvt_geom_from_tax  is 'Based on the zoom level & x y tile coordinates, return features (geometry) from the tax dataset in a given tile enveloppe used to create a mvt. Mostly useful for debugging';
+-- #
+comment on function  postgisftw.mvt_geom_from_buildings is 'Based on the zoom level & x y tile coordinates, return features (geometry) from thebuilding footprint dataset in a given tile enveloppe used to create a mvt. Mostly useful for debugging';

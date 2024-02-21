@@ -12,9 +12,13 @@ ALTER table postgisftw.gic_geo_role_eval_cleaned_pc_adm_da drop column  if exist
 -- #
 CREATE table if not exists  postgisftw.gic_geo_role_eval_cleaned_pc_adm_da_city as
 (
+	WITH poly AS (
+		select mus_nm_mun, st_transform(geom, 3347) as geom
+		from postgisftw.gic_geo_muni
+	)
 	SELECT poly.mus_nm_mun as city,  pts.*
 	FROM postgisftw.gic_geo_role_eval_cleaned_pc_adm_da as pts
-	JOIN postgisftw.gic_geo_muni as poly
+	JOIN poly
 	ON ST_Contains(poly.geom, pts.geom) 
 );
 -- #

@@ -30,4 +30,4 @@ LANGUAGE 'plpgsql'
 STABLE
 PARALLEL SAFE;
 -- #							
-COMMENT ON FUNCTION postgisftw.mvt_from_tax IS E'Based on the zoom (z) level + x & y tile coordinates, return the features (geom) that will help create a mapbox vector tile (mvt) for the TAX data. Mostly for debugging'
+COMMENT ON FUNCTION postgisftw.mvt_from_tax IS E'Based on the zoom (z) level + x & y tile coordinates, a mapbox vector tile (mvt) for the TAX data.  '
