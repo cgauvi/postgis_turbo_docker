@@ -11,9 +11,8 @@ db='test'
 RESULT=`su - postgres -c "psql -t -c \"SELECT count(1) from pg_database where datname='${db}';\""`
 if [[  ${RESULT} -eq 0 ]]; then
     echo -e "\e[32m [Entrypoint] Create database \e[1;31m ${db}  \033[0m"
-    DB_CREATE=$(createdb -h localhost -p 5432 -U ${POSTGRES_USER} -T template_postgis --dbname ${db})
-    eval ${DB_CREATE}
-    psql -U ${POSTGRES_USER} -p 5432 -h localhost -c 'CREATE EXTENSION IF NOT EXISTS pg_cron cascade;'
+    createdb -h localhost -p 5432 -U $POSTGRES_USER  --owner=$POSTGRES_USER -T template1 -e $db
+    psql -U $POSTGRES_USER --dbname=$db -p 5432 -h localhost -c 'CREATE EXTENSION IF NOT EXISTS pg_cron cascade;'
 else
     echo -e "\e[32m [Entrypoint] Database \e[1;31m ${db} \e[32m already exists \033[0m"
 
@@ -27,7 +26,7 @@ for DB in ${dbArrays[@]}; do
 done
 
 dbArrays=("$POSTGRES_DBNAME" "test")
-extensions=("postgis" "postgis_topology" "fuzzystrmatch" "postgis_tiger_geocoder" "address_standardizer" "addressing_dictionary")
+extensions=("postgis" "postgis_topology" "fuzzystrmatch" "postgis_tiger_geocoder" "address_standardizer" "addressing_dictionary" "postal" "h3" "h3_postgis")
 
 echo "creating extensions..."
 

@@ -1,3 +1,5 @@
+archive/
+
 docker/set_env_vars.sh
 
 R/renv.lock
@@ -62,3 +64,11 @@ renv/
 # R history
 .Rhistory
 
+# code & data downloaded from scripts
+docker/h3c/
+docker/libpostal/
+docker/libpostal_debug.png
+docker/local_postal_lib_data/
+docker/pgsql-postal/
+
+.ipynb_checkpoints

@@ -1,10 +1,9 @@
 drop function if exists postgisftw.mvt_from_point_data; 
-
-
+-- #
 CREATE OR REPLACE
 FUNCTION postgisftw.mvt_from_tax( z integer, x integer, y integer,
-									tbl_name_proj varchar default 'postgisftw.gic_geo_role_eval_cleaned_pc_adm_da_proj' , 					
-									geom_col_name varchar default  'geom_transformed')
+									tbl_name_proj varchar default 'postgisftw.gic_geo_role_eval_cleaned_pc_adm_da' , 					
+									geom_col_name varchar default  'geom')
 RETURNS bytea
 AS $$
 DECLARE
@@ -30,5 +29,5 @@ $$
 LANGUAGE 'plpgsql'
 STABLE
 PARALLEL SAFE;
-									
-COMMENT ON FUNCTION postgisftw.mvt_from_tax IS E'From based on the zoom level, return a mvt with either all features (geometry) in a given tile enveloppe or a random subset of these FOR POINT DATA.'
+-- #							
+COMMENT ON FUNCTION postgisftw.mvt_from_tax IS E'Based on the zoom (z) level + x & y tile coordinates, a mapbox vector tile (mvt) for the TAX data.  '

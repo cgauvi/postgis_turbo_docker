@@ -1,5 +1,5 @@
 drop function if exists postgisftw.mvt_geom_from_buildings; 
-
+-- #
 CREATE OR REPLACE
 FUNCTION postgisftw.mvt_geom_from_buildings( z integer, x integer, y integer,
 				tbl_name_proj varchar default 'postgisftw.building_footprints_open_data_proj' , 					
@@ -70,5 +70,5 @@ $$
 LANGUAGE 'plpgsql'
 Stable
 PARALLEL SAFE;
-
-COMMENT ON FUNCTION postgisftw.mvt_geom_from_buildings IS E'From based on the zoom level, either return all features (geometry) in a given tile enveloppe or a random subset of these.'
+-- #
+COMMENT ON FUNCTION postgisftw.mvt_geom_from_buildings IS E'Based on the zoom (z) level + x & y tile coordinates, return the features (geom) that will help create a mapbox vector tile (mvt) for the Buildings data. Mostly for debugging'
