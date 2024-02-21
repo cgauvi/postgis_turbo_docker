@@ -71,3 +71,4 @@ docker/libpostal_debug.png
 docker/local_postal_lib_data/
 docker/pgsql-postal/
 
+.ipynb_checkpoints
