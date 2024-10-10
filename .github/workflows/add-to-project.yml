@@ -1,0 +1,12 @@
+on:
+  issues:
+    types:
+      - reopened
+      - opened
+
+name: add-to-project
+
+jobs:
+  add-to-project:
+    uses: LaCapitale/dsops-r-actions/.github/workflows/add-to-project.yml@main
+    secrets: inherit
