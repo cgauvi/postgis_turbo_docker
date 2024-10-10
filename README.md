@@ -33,6 +33,8 @@ Running examples in this repo requires:
 
 ## Usage
 
+_if running from Windows, make sure to run `dos2unix docker.build_cmake.sh` and potentially other scripts as well. Otherwise, line endings might break the build._
+
 1. Clone the repo
 
 ```
