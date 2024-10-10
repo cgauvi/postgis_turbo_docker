@@ -1,4 +1,5 @@
 DROP FUNCTION IF EXISTS postgisftw.to_tsquery_partial;
+-- #
 CREATE OR REPLACE FUNCTION postgisftw.to_tsquery_partial(text)
 RETURNS tsquery 
 AS $$
@@ -15,11 +16,11 @@ LANGUAGE 'plpgsql'
 PARALLEL SAFE
 IMMUTABLE
 STRICT;
- 
-
+-- #
 DROP FUNCTION IF EXISTS postgisftw.address_query;
+-- #
 CREATE OR REPLACE FUNCTION postgisftw.address_query(
-    partialstr text DEFAULT '')
+    partialstr text DEFAULT '' )
 RETURNS TABLE(gid varchar, value text, rank real,  no_civi varchar, no_civi_frac varchar, geom geometry)
 AS $$
 BEGIN
@@ -34,11 +35,12 @@ BEGIN
         FROM postgisftw.gic_geo_role_eval_cleaned_pc_adm_da_city  p,
              postgisftw.to_tsquery_partial(partialstr) AS query
         WHERE  ts @@ query 
-		ORDER BY rank DESC , no_civi ASC
-        LIMIT 15;
+		ORDER BY rank DESC , no_civi ASC ;
 END;
 $$
 LANGUAGE 'plpgsql'
 PARALLEL SAFE
 STABLE
 STRICT;
+-- #
+COMMENT ON FUNCTION postgisftw.address_query IS 'Find tax assessment data records based on a partial address match';

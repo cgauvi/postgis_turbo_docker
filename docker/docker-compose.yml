@@ -48,6 +48,7 @@ services:
       timeout: 60s
       retries: 5
       start_period: 80s  
+    shm_size: 10g
 
   
   tileserv_private:
@@ -137,7 +138,7 @@ services:
   # Osm tiles for quebec can be downloaded from https://www.maptiler.com/ and placed them in ./tiles/osm-2020-02-10-v3.11_canada_quebec.mbtiles
   # Or tiles can be produced with openmaptiles - follow the quick start: https://github.com/openmaptiles/openmaptiles/blob/master/QUICKSTART.md
   mbtileserver:
-    image: consbio/mbtileserver:latest
+    image: ghcr.io/consbio/mbtileserver:latest
     container_name: mbtileserver
     entrypoint: /mbtileserver --enable-reload-signal --dir /opt/tippecanoe/tiles
     restart: always

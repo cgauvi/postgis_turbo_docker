@@ -33,6 +33,8 @@ Running examples in this repo requires:
 
 ## Usage
 
+_if running from Windows, make sure to run `dos2unix docker.build_cmake.sh` and potentially other scripts as well. Otherwise, line endings might break the build._
+
 1. Clone the repo
 
 ```
@@ -52,8 +54,19 @@ git clone https://github.com/cgauvi/postgis_turbo_docker.git
 - Mbtile serv: 5056
 - Nginx: 8000 
 
+4. Download data before building the container. Depending on your proxy, running `RUN curl --insecure xxx` or even `git clone https://github.com/` from within the container might fail. To avoid this issue, the dockerfile assumes some data is downloaded beforehand and placed in the `docker` directory. Run: (from the root)  
 
-4. Build and run the docker containers with docker-compose
+```{bash}
+cd docker
+./dl_postallib.sh
+./dl_h3_github.sh # 
+```
+
+`./dl_postallib.sh` download the zipped libpostal weights to `docker/local_postal_lib_data`
+`./dl_h3_github.sh` download the h3 source code repo. Seems useful since the repo is large and hungs indefinitely sometimes. A static dl upfront solves the problem.
+
+
+5. Build and run the docker containers with docker-compose
 
 - With `docker compose`
 
@@ -67,11 +80,11 @@ docker compose -f docker-compose.yml --env-file ./config/.env up
 
 - With regular `docker`
 
-    - Set `docker/set-env-vars.sh` with appropriate vars. See `docker/set-env-vars_sample.sh` for an example. 
-    - Run the following
+    - Run `docker/set-env-vars.sh` with appropriate vars. See `docker/set-env-vars_sample.sh` for an example. 
+    - Run the following:
 
 
-```
+```{bash}
 cd docker
 chmod u+x docker_up_manual.sh
 ./docker_up_manual.sh
